@@ -1,0 +1,45 @@
+body {
+  background-color: black;
+  margin: 0;
+}
+
+#member {
+  font-family: Helvetica;
+  font-size: 5em;
+  color: white;
+  text-shadow: 1px 1px 1px black;
+  margin: auto;
+  text-align: center;
+}
+
+#prompt {
+  margin-top: 50%;
+}
+
+#faceContainer {
+  position: fixed; 
+  top: -50%; 
+  left: -50%; 
+  width: 200%; 
+  height: 200%;
+  z-index: -1;
+}
+#memberName {
+  font-size: 1em;
+  text-shadow: 1px 1px 1px black;
+  background: none;
+  border: none;
+  color: white;
+  outline: 0px solid transparent;
+}
+
+#memberFace {
+  position: absolute; 
+  top: 0; 
+  left: 0; 
+  right: 0; 
+  bottom: 0; 
+  margin: auto; 
+  min-height: 50%;
+}
+
