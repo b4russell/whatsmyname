@@ -1,8 +1,13 @@
 /*jslint browser: true, devel: true*/
 /*global $, jQuery, alert, FastClick, Handlebars*/
+Date.now = Date.now || function () {return +new Date;};
 $(document).ready(function () {
     "use strict";
     var members = [],
+
+        wrongAnswers = 0,
+
+        startTime = Date.now(),
 
         defaultDiacriticsRemovalMap = [
             {'base': 'A', 'letters': /[\u0041\u24B6\uFF21\u00C0\u00C1\u00C2\u1EA6\u1EA4\u1EAA\u1EA8\u00C3\u0100\u0102\u1EB0\u1EAE\u1EB4\u1EB2\u0226\u01E0\u00C4\u01DE\u1EA2\u00C5\u01FA\u01CD\u0200\u0202\u1EA0\u1EAC\u1EB6\u1E00\u0104\u023A\u2C6F]/g},
@@ -92,17 +97,22 @@ $(document).ready(function () {
 
         loadRandomMember = function () {
             var numMembers = members.length,
-                memberIndex = Math.floor(Math.random() * numMembers) + 1,
+                memberIndex = Math.floor(Math.random() * numMembers),
                 member = members[memberIndex];
-            $('#prompt').show();
-            $('#prompt').html("What's my name? " + numMembers + " left.");
-            $('#member').attr('district', member.district);
-            $('#member').attr('lastName', member.lastName);
-            $('#member').attr('index', memberIndex);
-            $('#memberName').show();
-            $('#memberName').text('');
-            $("#memberName").focus();
-            $("#memberFace").attr('src', '/images/' + member.district + '.jpg');
+            if (numMembers) {
+                //load image before updating text
+                $("#memberFace").attr('src', '/images/' + member.district + '.jpg');
+                $('#member').attr('district', member.district);
+                $('#member').attr('lastName', member.lastName);
+                $('#member').attr('fullName', member.name);
+                $('#member').attr('index', memberIndex);
+            } else {
+                $('#memberFace').hide();
+                $('#prompt').html("You did it in " + Math.round((Date.now() - startTime) / 1000) + " seconds with " + wrongAnswers + " wrong answer" + (wrongAnswers === 1 ? "." : "s."));
+                $('#answer').text('');
+                $('#faceContainer').addClass('reset');
+            }
+            $('#progress').html(numMembers + " left.");
             return memberIndex;
         },
 
@@ -111,31 +121,53 @@ $(document).ready(function () {
             window.setTimeout(complete, 1000);
         },
 
-        checkAnswer = function (inputName, correctName) {
-            var correct = inputName === correctName;
+        checkAnswer = function (inputName, correctName, fullCorrectAnswer) {
+            var correct = inputName.toLowerCase() === correctName.toLowerCase().removeDiacritics(),
+                index = parseInt($("#member").attr("index"), 10),
+                nameWords = fullCorrectAnswer.trim().split(', '),
+                fullName = nameWords.length > 2 ? [nameWords[2], nameWords[0], nameWords[1]].join(' ') : nameWords.reverse().join(' ');
             if (correct) {
-                flashMessage("Right!", loadRandomMember);
-                members.splice(parseInt($("#member").attr("index"), 10), 1);
+                flashMessage("Right! I'm " + fullName +  ".", loadRandomMember);
+                members.splice(index, 1);
             } else {
-                flashMessage("Wrong! I'm " + correctName, loadRandomMember);
+                flashMessage("Wrong! I'm " + correctName.trim() + ".", loadRandomMember);
                 members.push(members[parseInt($("#member").attr("index"), 10)]);
+                wrongAnswers += 1;
             }
             return correct;
+        },
+
+
+
+        loadMembers = function () {
+            wrongAnswers = 0;
+
+            startTime = Date.now();
+
+            $.getJSON('members.json', function (json) {
+                members = json;
+                loadRandomMember();
+            });
         };
 
-    $.getJSON('members.json', function (json) {
-        members = json;
-        loadRandomMember();
-    });
 
-    $('#member').click(function () {
-        loadRandomMember();
-    });
+    loadMembers();
 
     //Make sure member name input is always focused
 
-    $('#memberName').blur(function () {
-        $('#memberName').focus();
+    $('#answer').blur(function () {
+        $('#answer').focus();
+    });
+
+    $('#memberFace').load(function () {
+        $('#prompt').show();
+        $('#answer').show();
+        $('#answer').text('');
+        $('#answer').attr('contenteditable', 'true');
+        $('#memberFace').show();
+        $('#prompt').html("What's my name?");
+        $('#answer').removeClass('greyout');
+        $("#answer").focus();
     });
 
     //Hack to enable trim in IE8
@@ -155,15 +187,22 @@ $(document).ready(function () {
         return str;
     };
 
+    $("body").on("click", ".reset", function () {
+        $(this).removeClass('reset');
+        loadMembers();
+    });
 
-    $("#memberName").keydown(function (e) {
+    $("#answer").keydown(function (e) {
         if (e.which === 13) {
             e.preventDefault();
-            checkAnswer($(this).text().trim(), $('#member').attr('lastName').removeDiacritics());
+            $("#progress").focus();
+            $(this).attr('contenteditable', 'false');
+            $(this).addClass('greyout');
+            checkAnswer($(this).text().trim(), $('#member').attr('lastName'), $('#member').attr('fullName'));
             return;
         }
     });
 
-    $('#memberName').focus();
+    $('#answer').focus();
 
 });

@@ -10,10 +10,17 @@ body {
   text-shadow: 1px 1px 1px black;
   margin: auto;
   text-align: center;
+  position: fixed;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  margin: auto;
+  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#4c000000', endColorstr='#4c000000');
 }
 
+
 #prompt {
-  margin-top: 50%;
+  position: relative;
 }
 
 #faceContainer {
@@ -24,12 +31,8 @@ body {
   height: 200%;
   z-index: -1;
 }
-#memberName {
-  font-size: 1em;
-  text-shadow: 1px 1px 1px black;
-  background: none;
-  border: none;
-  color: white;
+
+#answer {
   outline: 0px solid transparent;
 }
 
@@ -41,5 +44,30 @@ body {
   bottom: 0; 
   margin: auto; 
   min-height: 50%;
+  /*min-width: 50%;*/
+}
+
+#progress {
+  position: fixed;
+  font-size: 0.2em;
+  top: 0px;
+  padding: 1em;
+  right: 0px;
+}
+
+.greyout {
+  opacity: 0.5;
+}
+
+@media (max-width: 800px) , (max-height: 400px) {
+  #member {
+    font-size: 3em;
+  }
+}
+
+@media (max-height: 250px) {
+  #member {
+    font-size: 1.5em;
+  }
 }
 
