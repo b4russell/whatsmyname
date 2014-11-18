@@ -1,5 +1,5 @@
 {
-  "name": "What's My Name?",
+  "name": "whatsmyname",
   "version": "1.0.0",
   "description": "Flash cards to learn the names that go with faces.",
   "main": "server.js",
