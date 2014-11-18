@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup as BS
 import urllib
 import re
 import json
-membersUrl = 'http://assembly.ca.gov/assemblymembers'
+membersUrl = 'http://senate.ca.gov/senators'
 districtClass = 'views-field-field-member-district-value'
 partyClass = 'views-field-field-member-party-value'
 imageDir = 'static/images/'
