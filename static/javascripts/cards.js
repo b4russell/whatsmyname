@@ -125,7 +125,7 @@ $(document).ready(function () {
             var correct = inputName.toLowerCase() === correctName.toLowerCase().removeDiacritics(),
                 index = parseInt($("#member").attr("index"), 10),
                 nameWords = fullCorrectAnswer.trim().split(', '),
-                fullName = nameWords.length > 2 ? [nameWords[2], nameWords[0], nameWords[1]].join(' ') : nameWords.reverse().join(' ');
+                fullName = nameWords.length > 2 ? [nameWords[2], nameWords[0], nameWords[1].replace(".", "")].join(' ') : nameWords.reverse().join(' ');
             if (correct) {
                 flashMessage("Right! I'm " + fullName +  ".", loadRandomMember);
                 members.splice(index, 1);
