@@ -1,0 +1,23 @@
+{
+  "name": "What's My Name?",
+  "version": "1.0.0",
+  "description": "Flash cards to learn the names that go with faces.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "flashcards",
+    "legislature",
+    "california",
+    "learning",
+    "game"
+  ],
+  "author": "Ben Russell",
+  "license": "ISC",
+  "dependencies": {
+    "connect": "^3.2.0",
+    "serve-static": "^1.7.0"
+  }
+}
