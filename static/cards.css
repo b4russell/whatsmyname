@@ -59,13 +59,13 @@ body {
   opacity: 0.5;
 }
 
-@media (max-width: 800px) , (max-height: 400px) {
+@media screen and (max-width: 800px) , screen and (max-height: 400px) {
   #member {
     font-size: 3em;
   }
 }
 
-@media (max-height: 250px) {
+@media screen and (max-height: 250px) {
   #member {
     font-size: 1.5em;
   }
